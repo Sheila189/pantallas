@@ -1,0 +1,85 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1500px;
+  margin: 20px auto;
+}
+
+table {
+  width: 1250px;
+  border-collapse: collapse;
+  border: 1px solid #000;
+}
+
+td {
+  padding: 10px;
+}
+
+.form-title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.form-item {
+  margin-bottom: 10px;
+}
+
+.form-check-option {
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center; /* Es para tenerlo centrado */
+  white-space: nowrap;
+  justify-content: flex-start;
+  margin-left: 20px;
+}
+
+.form-check-input {
+  margin-right: 3px;
+  align-self: center; /* Es para tenerlo centrado */
+}
+
+.form-check-label {
+  width: auto;
+  text-align: left; /* Cambio a alineación a la izquierda */
+  display: flex;
+  align-items: left;
+}
+
+.label {
+  width: 200px;
+  text-align: left; /* Cambio a alineación a la izquierda */
+  margin-right: 20px;
+}
+
+.htmlFor {
+  width: 200px;
+  text-align: left; /* Cambio a alineación a la izquierda */
+  margin-right: 20px;
+}
+
+/* Estilo adicional para las últimas opciones */
+.form-check-option:last-child .form-check-label {
+  width: auto;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+#jurisdiction,
+#date_service,
+#effective_Date {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+/* Ajustes adicionales para ocupar toda la pantalla */
+.formulario {
+  width: 1200px;
+  margin-right: 20px;
+}
