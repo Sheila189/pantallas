@@ -1,0 +1,31 @@
+.menu-principal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  font-size: 56px; /* Ajusta el tamaño de la fuente */
+  padding: 22px 44px; /* Ajusta el espacio interno alrededor del texto */
+}
+
+.menu-item {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  margin-bottom: 20px; /* Agrega un margen inferior de 20px entre los botones */
+}
+
+/* Media queries para ajustar el diseño en diferentes tamaños de pantalla */
+@media (min-width: 768px) {
+  .menu-item {
+    width: 50%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .menu-item {
+    width: 33.33%;
+  }
+}
