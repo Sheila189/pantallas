@@ -1,7 +1,12 @@
 import React, { useContext, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { getAuth, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail} from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
 import "../css/Login.css";
 import { UserContext } from "../../shared/UserContext";
@@ -39,11 +44,17 @@ const Login = ({ onLogin, errorMessage }) => {
 
     try {
       // Iniciar sesión
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
       if (!userCredential.user.emailVerified) {
         await sendEmailVerification(auth.currentUser);
-        alert('Se ha enviado un correo de verificación a tu dirección de correo electrónico.');
+        alert(
+          "Se ha enviado un correo de verificación a tu dirección de correo electrónico."
+        );
         return;
       }
 
@@ -65,10 +76,13 @@ const Login = ({ onLogin, errorMessage }) => {
               name_empresa: details.name_empresa,
               signature: details.signature,
               verified: user.emailVerified,
+              middle: details.middle,
+              lastname: details.lastname,
+              auth: user,
             };
             localStorage.setItem("user", JSON.stringify(userForLocalStorage));
             setUserData(userForLocalStorage);
-            
+
             if (details.role === "3") {
               navigate("/menu");
             } else {
@@ -88,13 +102,17 @@ const Login = ({ onLogin, errorMessage }) => {
       setFormError("Por favor, ingresa tu correo electrónico");
       return;
     }
-  
+
     try {
       await sendPasswordResetEmail(auth, email);
-      alert('Se ha enviado un correo con instrucciones para restablecer tu contraseña.');
+      alert(
+        "Se ha enviado un correo con instrucciones para restablecer tu contraseña."
+      );
     } catch (error) {
       console.error(error);
-      setFormError("Ocurrió un error al enviar el correo de restablecimiento de contraseña");
+      setFormError(
+        "Ocurrió un error al enviar el correo de restablecimiento de contraseña"
+      );
     }
   };
 
@@ -140,7 +158,11 @@ const Login = ({ onLogin, errorMessage }) => {
             </span>
           </div>
           <div>
-            <Link to="#" className="forgot-password-link" onClick={handleForgotPasswordClick}>
+            <Link
+              to="#"
+              className="forgot-password-link"
+              onClick={handleForgotPasswordClick}
+            >
               ¿No recuerdas tu contraseña?
             </Link>
           </div>
@@ -160,4 +182,3 @@ const Login = ({ onLogin, errorMessage }) => {
 };
 
 export default Login;
-

@@ -1,11 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useMediaQuery } from '@mui/material';
-import TopBar from './TopBar';
-import { getFirestore, doc, getDocs } from "firebase/firestore/lite";
-import '../css/perfil.css';
-import { UserContext } from '../../shared/UserContext';
+import React, { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useMediaQuery } from "@mui/material";
+import TopBar from "./TopBar";
+import { getFirestore, doc, getDocs, collection } from "firebase/firestore/lite";
+import "../css/perfil.css";
+import { UserContext } from "../../shared/UserContext";
 
 const Perfil = () => {
   const navigate = useNavigate();
@@ -15,7 +15,6 @@ const Perfil = () => {
 
   const { userData, setUserData } = useContext(UserContext);
   const db = getFirestore();
-  const userDocRef = doc(db, "persons", userData.uid); // Define userDocRef here
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingAuth, setIsEditingAuth] = useState(false);
@@ -25,7 +24,7 @@ const Perfil = () => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
-    if (name === 'avatar') {
+    if (name === "avatar") {
       const reader = new FileReader();
       reader.onload = () => {
         setUserData((prevData) => ({
@@ -45,23 +44,38 @@ const Perfil = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userDocSnapshot = await getDocs(userDocRef);
-        if (userDocSnapshot.exists()) {
-          const userDetails = userDocSnapshot.data();
-          setUserData((prevUserData) => ({
-            ...prevUserData,
-            middle: userDetails.middle,
-            lastname: userDetails.lastname,
-            password: userDetails.password,
-          }));
-        }
+        const db = getFirestore();
+        const docRef = collection(db, "persons");
+        getDocs(docRef).then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            if (doc.data().auth_uid === userData.uid) {
+              const details = doc.data();
+              console.log(details)
+              const userForLocalStorage = {
+                uid: userData.uid,
+                email: userData.email,
+                name: details.name,
+                role: details.role,
+                logo: details.logo,
+                name_empresa: details.name_empresa,
+                signature: details.signature,
+                verified: userData.emailVerified,
+                middle: details.middle,
+                lastname: details.lastname,
+                auth: userData.auth,
+              };
+              localStorage.setItem("user", JSON.stringify(userForLocalStorage));
+              setUserData(userForLocalStorage);
+            }
+          });
+        });
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
-  
+
     fetchUserData();
-  }, [userDocRef, setUserData]);
+  }, []);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -81,36 +95,72 @@ const Perfil = () => {
     setIsEditingAuth(false);
   };
 
-  const isSmallScreen = useMediaQuery('(max-width: 500px)');
-  const isMediumScreen = useMediaQuery('(max-width: 950px)');
-  const isLargeScreen = useMediaQuery('(min-width: 1200px)');
+  const isSmallScreen = useMediaQuery("(max-width: 500px)");
+  const isMediumScreen = useMediaQuery("(max-width: 950px)");
+  const isLargeScreen = useMediaQuery("(min-width: 1200px)");
 
   return (
     <div>
       <TopBar name={userData.name} avatar={userData.avatar} />
       <h1 className="title">Perfil de Usuario</h1>
-      <div className={`perfil-container ${isLargeScreen ? 'centered' : ''} ${isSmallScreen ? 'column-1-centered' : ''}`}>
-        <div className={`column-1 ${isSmallScreen ? 'full-width' : ''}`}>
-        <h3 className="perfil-title">Datos de Usuario</h3>
-        <div className={`perfil-section ${isMediumScreen || (isLargeScreen && !isSmallScreen) ? 'column-1' : ''}`}>
-        <div className="input-container">
-          <label>
-            Logo:
-            {userData.logo && (
-              <img src={userData.logo} alt="Avatar"  style={{ height: 100, width: 100, marginLeft: 20, marginTop: 20 }}/>
-            )}
-            <div className="file-input-wrapper">
-              <input type="file" name="avatar" accept="image/*" onChange={handleChange} disabled={!isEditing}/>
-              <button className="file-input-button" disabled={!isEditing} type="button">
-                Seleccionar imagen
-              </button>
+      <div
+        className={`perfil-container ${isLargeScreen ? "centered" : ""} ${
+          isSmallScreen ? "column-1-centered" : ""
+        }`}
+      >
+        <div className={`column-1 ${isSmallScreen ? "full-width" : ""}`}>
+          <h3 className="perfil-title">Datos de Usuario</h3>
+          <div
+            className={`perfil-section ${
+              isMediumScreen || (isLargeScreen && !isSmallScreen)
+                ? "column-1"
+                : ""
+            }`}
+          >
+            <div className="input-container">
+              <label>
+                Logo:
+                {userData.logo && (
+                  <img
+                    src={userData.logo}
+                    alt="Avatar"
+                    style={{
+                      height: 100,
+                      width: 100,
+                      marginLeft: 20,
+                      marginTop: 20,
+                    }}
+                  />
+                )}
+                <div className="file-input-wrapper">
+                  <input
+                    type="file"
+                    name="avatar"
+                    accept="image/*"
+                    onChange={handleChange}
+                    disabled={!isEditing}
+                  />
+                  <button
+                    className="file-input-button"
+                    disabled={!isEditing}
+                    type="button"
+                  >
+                    Seleccionar imagen
+                  </button>
+                </div>
+              </label>
             </div>
-          </label>
-        </div>
             <div className="input-container">
               <label>
                 Nombre de la Empresa:
-                <input type="text" name="name_empresa" value={userData.name_empresa} onChange={handleChange} disabled={!isEditing} className={isSmallScreen ? "full-width" : ""}/>
+                <input
+                  type="text"
+                  name="name_empresa"
+                  value={userData.name_empresa}
+                  onChange={handleChange}
+                  disabled={!isEditing}
+                  className={isSmallScreen ? "full-width" : ""}
+                />
               </label>
             </div>
             {!isEditing && (
@@ -126,7 +176,13 @@ const Perfil = () => {
           </div>
         </div>
         {(isMediumScreen || (isLargeScreen && !isSmallScreen)) && (
-          <div className={`perfil-section ${isMediumScreen || (isLargeScreen && !isSmallScreen) ? 'column-2' : ''}`}>
+          <div
+            className={`perfil-section ${
+              isMediumScreen || (isLargeScreen && !isSmallScreen)
+                ? "column-2"
+                : ""
+            }`}
+          >
             <div className="address-container">
               <hr className="separator" />
               <h3 className="address-title">Datos Usuario</h3>
@@ -170,7 +226,12 @@ const Perfil = () => {
                     <img
                       src={userData.signature}
                       alt="Signature"
-                      style={{ height: 100, width: 100, marginLeft: 20, marginTop: 20 }}
+                      style={{
+                        height: 100,
+                        width: 100,
+                        marginLeft: 20,
+                        marginTop: 20,
+                      }}
                     />
                   )}
                   <div className="file-input-wrapper">
@@ -206,48 +267,54 @@ const Perfil = () => {
               <hr className="separator" />
               <h3 className="address-title">Datos Cuenta</h3>
               <div className="address-section">
-              <div className="address-item">
-                <label>Email:</label>
-                <input
-                  type="text"
-                  name="email"
-                  value={userData.email}
-                  onChange={handleChange}
-                  className={isSmallScreen ? "full-width" : ""}
-                />
-              </div>
-              <div className="address-item">
-                <label>Contraseña:</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={userData.password}
-                  onChange={handleChange}
-                  disabled={!isEditingAuth}
-                  className={isSmallScreen ? "full-width" : ""}
-                />
-              </div>
-              {!isEditingAuth && (
-                <button className="edit-button" onClick={handleEditAuth}>
-                  Editar Cuenta
-                </button>
-              )}
-              {isEditingAuth && (
-                <button className="save-button" onClick={handleSaveChanges}>
-                  Guardar Datos
-                </button>
-              )}
+                <div className="address-item">
+                  <label>Email:</label>
+                  <input
+                    type="text"
+                    name="email"
+                    value={userData.email}
+                    onChange={handleChange}
+                    className={isSmallScreen ? "full-width" : ""}
+                  />
+                </div>
+                <div className="address-item">
+                  <label>Contraseña:</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={userData.password}
+                    onChange={handleChange}
+                    disabled={!isEditingAuth}
+                    className={isSmallScreen ? "full-width" : ""}
+                  />
+                </div>
+                {!isEditingAuth && (
+                  <button className="edit-button" onClick={handleEditAuth}>
+                    Editar Cuenta
+                  </button>
+                )}
+                {isEditingAuth && (
+                  <button className="save-button" onClick={handleSaveChanges}>
+                    Guardar Datos
+                  </button>
+                )}
               </div>
             </div>
           </div>
         )}
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px'}}>
-          <ArrowBackIcon style={{ fontSize: '2.5rem' }} variant="contained" color="primary" onClick={handleGoBack} />
+      <div
+        style={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
+      >
+        <ArrowBackIcon
+          style={{ fontSize: "2.5rem" }}
+          variant="contained"
+          color="primary"
+          onClick={handleGoBack}
+        />
       </div>
     </div>
   );
 };
 
 export default Perfil;
-

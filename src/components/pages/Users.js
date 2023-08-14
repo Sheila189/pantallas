@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Typography, TextField, InputAdornment, Table, TableHead, TableRow, TableCell, TableBody, TableSortLabel, IconButton, Pagination, Select, MenuItem } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -11,6 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import PreviewDialog from './previews/PreviewDialog';
 import EditFormNameDialog from './previews/EditFormNameDialog';
 import TopBar from './TopBar';
+import { collection, getDocs, getFirestore } from 'firebase/firestore/lite';
 
 const Users = () => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const Users = () => {
   const [selectedForm, setSelectedForm] = useState(null);
   const [editingFormName, setEditingFormName] = useState('');
   const [openEditFormNameDialog, setOpenEditFormNameDialog] = useState(false);
+  const [formData, setFormData] = useState([]);
 
 
   const handleGoBack = () => {
@@ -55,15 +57,23 @@ const Users = () => {
   };
 
   // Datos de ejemplo
-  const formData = [
-    { nombre: 'Juan Carlos Flores', fecha: '2023-05-20', rol: 'Admin' },
-    { nombre: 'Pedro Francisco Gomez', fecha: '2023-05-22', rol: 'Cliente' },
-    { nombre: 'Karla Castillo', fecha: '2023-05-23', rol: 'Cliente' },
-    { nombre: 'Ana Figueroa', fecha: '2023-05-20', rol: 'Cliente' },
-    { nombre: 'Perla Sanchez', fecha: '2023-05-22', rol: 'Admin' },
-    { nombre: 'Formulario 3', fecha: '2023-05-23', rol: 'Cliente' },
-    // ...
-  ];
+  async function getPersons() {
+    const db = getFirestore();
+    const querySnapshot = await getDocs(collection(db, "persons"));
+    let persons = [];
+    querySnapshot.forEach((doc) => {
+      const person = {
+        nombre: doc.data().name,
+        rol: doc.data().role===3 ? "Administrador" : "Usuario",
+        fecha: doc.data().date,
+      }
+      persons.push(person);
+    });
+    setFormData(persons);
+  }
+  useEffect(() => {
+    getPersons();
+  }, []);
 
   // Filtrar los datos basado en el texto de búsqueda
   const filteredData = formData.filter((form) => {
