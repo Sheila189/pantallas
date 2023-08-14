@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import "../../css/forms2.css";
 import TopBar from "../TopBar";
-import { savePDF } from "@progress/kendo-react-pdf";
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 
 const NB4 = () => {
@@ -95,225 +93,10 @@ const NB4 = () => {
         } catch (e) {
           alert("Error adding document: ", e);
         }
-
-        const generatePDF = async (pdfData) => {
-          const {
-            jurisdiction,
-            dateService,
-            noticeOf,
-            effectiveDate,
-            typeObject,
-            object,
-            ownersNo,
-            jurisdictionNo,
-            nationalBoardNo,
-            nameManufacturer,
-            nameOwner,
-            nameOwnerCountry,
-            locationObjectCountry,
-            userObject,
-            dateLastCertificate,
-            certificateIssued,
-            reasonDiscontinuance,
-            chiefInspector,
-            branchOffice,
-          } = pdfData;
-
-          // Crear un nuevo documento PDF
-          const pdfDoc = await PDFDocument.create();
-          const page = pdfDoc.addPage();
-
-          // Establecer fuentes
-          const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-          // Agregar texto al PDF
-          page.drawText("FORM NB-4", {
-            x: 50,
-            y: 750,
-            font,
-            size: 16,
-            color: rgb(0, 0, 0),
-          });
-          page.drawText("NEW BUSINESS OR DISCONTINUANCE", {
-            x: 50,
-            y: 730,
-            font,
-            size: 14,
-            color: rgb(0, 0, 0),
-          });
-
-          // Datos del formulario
-          page.drawText(`1. JURISDICTION: ${jurisdiction}`, {
-            x: 50,
-            y: 700,
-            font,
-            size: 12,
-            color: rgb(0, 0, 0),
-          });
-          page.drawText(`2. DATE OF SERVICE: ${dateService}`, {
-            x: 50,
-            y: 680,
-            font,
-            size: 12,
-            color: rgb(0, 0, 0),
-          });
-          page.drawText(`2. NOTICE OF: ${noticeOf ? "Yes" : "No"}`, {
-            x: 50,
-            y: 660,
-            font,
-            size: 12,
-            color: rgb(0, 0, 0),
-          });
-          page.drawText(`3. EFFECTIVE DATE: ${effectiveDate}`, {
-            x: 50,
-            y: 640,
-            font,
-            size: 12,
-            color: rgb(0, 0, 0),
-          });
-          page.drawText(
-            `4. TYPE OF OBJECT: ${
-              typeObject ? "High Pressure" : "Low Pressure"
-            }`,
-            { x: 50, y: 620, font, size: 12, color: rgb(0, 0, 0) }
-          );
-          page.drawText(`5. OBJECT: ${object}`, {
-            x: 50,
-            y: 600,
-            font,
-            size: 12,
-            color: rgb(0, 0, 0),
-          });
-          page.drawText(`6. OWNER'S NO.: ${ownersNo}`, {
-            x: 50,
-            y: 580,
-            font,
-            size: 12,
-            color: rgb(0, 0, 0),
-          });
-          page.drawText(`7. JURISDICTION NO.: ${jurisdictionNo}`, {
-            x: 50,
-            y: 560,
-            font,
-            size: 12,
-            color: rgb(0, 0, 0),
-          });
-          page.drawText(`8. NATIONAL BOARD NO.: ${nationalBoardNo}`, {
-            x: 50,
-            y: 540,
-            font,
-            size: 12,
-            color: rgb(0, 0, 0),
-          });
-          page.drawText(`9. NAME OF MANUFACTURER: ${nameManufacturer}`, {
-            x: 50,
-            y: 520,
-            font,
-            size: 12,
-            color: rgb(0, 0, 0),
-          });
-          page.drawText(`10. NAME OF OWNER: ${nameOwner}`, {
-            x: 50,
-            y: 500,
-            font,
-            size: 12,
-            color: rgb(0, 0, 0),
-          });
-          page.drawText(
-            `11. NAME OF OWNER INCLUDING COUNTY: ${nameOwnerCountry}`,
-            { x: 50, y: 480, font, size: 12, color: rgb(0, 0, 0) }
-          );
-          page.drawText(
-            `12. LOCATION OF OBJECT INCLUDING COUNTY: ${locationObjectCountry}`,
-            { x: 50, y: 460, font, size: 12, color: rgb(0, 0, 0) }
-          );
-          page.drawText(
-            `13. USER OF OBJECT (IF SAME AS OWNER SHOW “SAME”): ${userObject}`,
-            { x: 50, y: 440, font, size: 12, color: rgb(0, 0, 0) }
-          );
-          page.drawText(
-            `14. DATE OF LAST CERTIFICATE INSPECT., IF ANY: ${dateLastCertificate}`,
-            { x: 50, y: 420, font, size: 12, color: rgb(0, 0, 0) }
-          );
-          page.drawText(
-            `15. CERTIFICATE ISSUED: ${certificateIssued ? "Yes" : "No"}`,
-            { x: 50, y: 400, font, size: 12, color: rgb(0, 0, 0) }
-          );
-          page.drawText(
-            `16. REASON FOR DISCONTINUANCE OR CANCELLATION: ${
-              reasonDiscontinuance ? "Yes" : "No"
-            }`,
-            { x: 50, y: 380, font, size: 12, color: rgb(0, 0, 0) }
-          );
-          page.drawText(`17. REMARKS (USE REVERSE SIDE):`, {
-            x: 50,
-            y: 360,
-            font,
-            size: 12,
-            color: rgb(0, 0, 0),
-          });
-          page.drawText(`18. By: ${chiefInspector}`, {
-            x: 50,
-            y: 340,
-            font,
-            size: 12,
-            color: rgb(0, 0, 0),
-          });
-          page.drawText(`BRANCH OFFICE: ${branchOffice}`, {
-            x: 50,
-            y: 320,
-            font,
-            size: 12,
-            color: rgb(0, 0, 0),
-          });
-
-          // Guardar el PDF en una variable Uint8Array
-          const pdfBytes = await pdfDoc.save();
-
-          // Guardar el PDF en el navegador y abrirlo en una nueva pestaña
-          const blob = new Blob([pdfBytes], { type: "application/pdf" });
-          const url = URL.createObjectURL(blob);
-          window.open(url);
-        };
-
-        const pdfBlob = await generatePDF(this.pdfData);
-
-        let fileName = "formulario_nb4.pdf"; // Nombre predeterminado
-
-        // Obtener el nombre personalizado del archivo del formulario
-        const customFileName = form4Data.customFileName.trim();
-        if (customFileName !== "") {
-          fileName = `${customFileName}.pdf`;
-        }
-
-        savePDF(pdfBlob, { fileName }); // Descargar el PDF generado con el nombre personalizado
       }
     },
     [form4Data]
   );
-
-  // Función para guardar los datos en la base de datos
-  /*const saveFormData = useCallback(async () => {
-  // Realizar la lógica para guardar los datos en la base de datos
-  // Puedes utilizar fetch u otra librería para hacer la solicitud al servidor
-  try {
-    const response = await fetch('http://localhost:3000/api/form/nb4', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(form4Data),
-    });
-
-    if (response.ok) {
-      console.log('Datos guardados exitosamente');
-    } else {
-      console.error('Error al guardar los datos:', response.status);
-    }
-  } catch (error) {
-    console.error('Error al comunicarse con el servidor:', error);
-  }
-}, [form4Data]);*/
 
   const validateForm = () => {
     const {
@@ -445,21 +228,12 @@ const NB4 = () => {
               </td>
               <td>
                 <div className="form-item">
-                  <input
-                    type="text"
-                    id="jurisdiction"
-                    name="jurisdiction"
-                    value={form4Data.jurisdiction}
-                    onChange={handleChange}
-                  />
+                  <input type="text" id="jurisdiction" name="jurisdiction" value={form4Data.jurisdiction} onChange={handleChange}/>
                   JURISDICTION
                   {formErrors.jurisdiction && (
                     <p className="error-message">
                       {formErrors.jurisdiction}
-                      <span
-                        className="close-button"
-                        onClick={() => handleClearError("jurisdiction")}
-                      >
+                      <span className="close-button" onClick={() => handleClearError("jurisdiction")}>
                         X
                       </span>
                     </p>
@@ -469,21 +243,12 @@ const NB4 = () => {
               <td colSpan="2"></td>
               <td>
                 <div className="form-item">
-                  <input
-                    type="text"
-                    id="date_service"
-                    name="date_service"
-                    value={form4Data.date_service}
-                    onChange={handleChange}
-                  />
+                  <input type="text" id="date_service" name="date_service" value={form4Data.date_service} onChange={handleChange}/>
                   <label htmlFor="date_service">1. DATE OF SERVICE</label>
                   {formErrors.date_service && (
                     <p className="error-message">
                       {formErrors.date_service}
-                      <span
-                        className="close-button"
-                        onClick={() => handleClearError("date_service")}
-                      >
+                      <span className="close-button" onClick={() => handleClearError("date_service")}>
                         X
                       </span>
                     </p>
@@ -497,64 +262,29 @@ const NB4 = () => {
               </td>
               <td colSpan="2">
                 <div className="option-buttons reason-options">
-                  <div
-                    className={`centered-option${
-                      form4Data.noticeOf === "new_insurance" ? " selected" : ""
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      id="new_insurance"
-                      name="noticeOf"
-                      value="new_insurance"
-                      checked={form4Data.noticeOf === "new_insurance"}
-                      onChange={() =>
-                        handleOptionChange("noticeOf", "new_insurance")
-                      }
+                  <div className={`centered-option${ form4Data.noticeOf === "new_insurance" ? " selected" : "" }`}>
+                    <input type="checkbox" id="new_insurance" name="noticeOf" value="new_insurance"
+                      checked={form4Data.noticeOf === "new_insurance"} onChange={() => handleOptionChange("noticeOf", "new_insurance")}
                     />
                     <label htmlFor="new_insurance">
                       New insurance business
                     </label>
                   </div>
-                  <div
-                    className={`centered-option${
-                      form4Data.noticeOf === "discontinuance" ? " selected" : ""
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      id="discontinuance"
-                      name="noticeOf"
-                      value="discontinuance"
-                      checked={form4Data.noticeOf === "discontinuance"}
-                      onChange={() =>
-                        handleOptionChange("noticeOf", "discontinuance")
-                      }
+                  <div className={`centered-option${ form4Data.noticeOf === "discontinuance" ? " selected" : ""}`}>
+                    <input type="checkbox" id="discontinuance" name="noticeOf" value="discontinuance"
+                      checked={form4Data.noticeOf === "discontinuance"} onChange={() => handleOptionChange("noticeOf", "discontinuance")}
                     />
                     <label htmlFor="discontinuance">Discontinuance</label>
                   </div>
-                  <div
-                    className={`centered-option${
-                      form4Data.noticeOf === "discontinuance" ? " selected" : ""
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      id="refusal"
-                      name="noticeOf"
-                      value="refusal"
-                      checked={form4Data.noticeOf === "refusal"}
-                      onChange={() => handleOptionChange("noticeOf", "refusal")}
-                    />
+                  <div className={`centered-option${ form4Data.noticeOf === "discontinuance" ? " selected" : ""}`}>
+                    <input type="checkbox" id="refusal" name="noticeOf" value="refusal"
+                      checked={form4Data.noticeOf === "refusal"} onChange={() => handleOptionChange("noticeOf", "refusal")}/>
                     <label htmlFor="refusal">Refusal to insure</label>
                   </div>
                   {formErrors.noticeOf && (
                     <p className="error-message">
                       {formErrors.noticeOf}
-                      <span
-                        className="close-button"
-                        onClick={() => handleClearError("noticeOf")}
-                      >
+                      <span className="close-button" onClick={() => handleClearError("noticeOf")} >
                         X
                       </span>
                     </p>
@@ -564,20 +294,11 @@ const NB4 = () => {
               <td>
                 <div className="form-item">
                   <label htmlFor="effective_Date">3. Effective Date</label>
-                  <input
-                    type="text"
-                    id="effective_Date"
-                    name="effective_Date"
-                    value={form4Data.effective_Date}
-                    onChange={handleChange}
-                  />
+                  <input type="text" id="effective_Date" name="effective_Date" value={form4Data.effective_Date} onChange={handleChange}/>
                   {formErrors.effective_Date && (
                     <p className="error-message">
                       {formErrors.effective_Date}
-                      <span
-                        className="close-button"
-                        onClick={() => handleClearError("effective_Date")}
-                      >
+                      <span className="close-button" onClick={() => handleClearError("effective_Date")}>
                         X
                       </span>
                     </p>
@@ -591,68 +312,24 @@ const NB4 = () => {
               </td>
               <td>
                 <div className="option-buttons reason-options">
-                  <div
-                    className={`centered-option${
-                      form4Data.typeObject === "high_pressure"
-                        ? " selected"
-                        : ""
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      id="high_pressure"
-                      name="typeObject"
-                      value="high_pressure"
-                      checked={form4Data.typeObject === "high_pressure"}
-                      onChange={() =>
-                        handleOptionChange("typeObject", "high_pressure")
-                      }
-                    />
+                  <div className={`centered-option${ form4Data.typeObject === "high_pressure" ? " selected": ""}`}>
+                    <input type="checkbox" id="high_pressure" name="typeObject" value="high_pressure"
+                      checked={form4Data.typeObject === "high_pressure"} onChange={() => handleOptionChange("typeObject", "high_pressure") }/>
                     <label htmlFor="new_insurance">High-pressure boiler</label>
                   </div>
-                  <div
-                    className={`centered-option${
-                      form4Data.typeObject === "low_pressure" ? " selected" : ""
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      id="low_pressure"
-                      name="typeObject"
-                      value="low_pressure"
-                      checked={form4Data.typeObject === "low_pressure"}
-                      onChange={() =>
-                        handleOptionChange("typeObject", "low_pressure")
-                      }
-                    />
+                  <div className={`centered-option${ form4Data.typeObject === "low_pressure" ? " selected" : ""}`}>
+                    <input type="checkbox" id="low_pressure" name="typeObject" value="low_pressure" checked={form4Data.typeObject === "low_pressure"} onChange={() => handleOptionChange("typeObject", "low_pressure")}/>
                     <label htmlFor="discontinuance">Low-pressure boiler</label>
                   </div>
-                  <div
-                    className={`centered-option${
-                      form4Data.typeObject === "pressure_vessel"
-                        ? " selected"
-                        : ""
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      id="pressure_vessel"
-                      name="typeObject"
-                      value="pressure_vessel"
-                      checked={form4Data.typeObject === "pressure_vessel"}
-                      onChange={() =>
-                        handleOptionChange("typeObject", "pressure_vessel")
-                      }
-                    />
+                  <div className={`centered-option${ form4Data.typeObject === "pressure_vessel"? " selected": ""}`}>
+                    <input type="checkbox" id="pressure_vessel" name="typeObject" value="pressure_vessel"
+                      checked={form4Data.typeObject === "pressure_vessel"} onChange={() => handleOptionChange("typeObject", "pressure_vessel")}/>
                     <label htmlFor="pressure_vessel">Pressure vessel</label>
                   </div>
                   {formErrors.typeObject && (
                     <p className="error-message">
                       {formErrors.typeObject}
-                      <span
-                        className="close-button"
-                        onClick={() => handleClearError("typeObject")}
-                      >
+                      <span className="close-button" onClick={() => handleClearError("typeObject")}>
                         X
                       </span>
                     </p>
@@ -664,20 +341,11 @@ const NB4 = () => {
               <td>
                 <div className="form-item">
                   <label htmlFor="object">5. OBJECT</label>
-                  <input
-                    type="text"
-                    id="object"
-                    name="object"
-                    value={form4Data.object}
-                    onChange={handleChange}
-                  />
+                  <input type="text" id="object" name="object" value={form4Data.object} onChange={handleChange}/>
                   {formErrors.object && (
                     <p className="error-message">
                       {formErrors.object}
-                      <span
-                        className="close-button"
-                        onClick={() => handleClearError("object")}
-                      >
+                      <span className="close-button" onClick={() => handleClearError("object")}>
                         X
                       </span>
                     </p>
@@ -687,20 +355,11 @@ const NB4 = () => {
               <td>
                 <div className="form-item">
                   <label htmlFor="ownersNo">6. OWNER’S NO.</label>
-                  <input
-                    type="text"
-                    id="ownersNo"
-                    name="ownersNo"
-                    value={form4Data.ownersNo}
-                    onChange={handleChange}
-                  />
+                  <input type="text" id="ownersNo" name="ownersNo" value={form4Data.ownersNo} onChange={handleChange}/>
                   {formErrors.ownersNo && (
                     <p className="error-message">
                       {formErrors.ownersNo}
-                      <span
-                        className="close-button"
-                        onClick={() => handleClearError("ownersNo")}
-                      >
+                      <span className="close-button" onClick={() => handleClearError("ownersNo")}>
                         X
                       </span>
                     </p>
@@ -710,13 +369,7 @@ const NB4 = () => {
               <td>
                 <div className="form-item">
                   <label htmlFor="jurisdictionNo">7. JURISDICTION NO.</label>
-                  <input
-                    type="text"
-                    id="jurisdictionNo"
-                    name="jurisdictionNo"
-                    value={form4Data.jurisdictionNo}
-                    onChange={handleChange}
-                  />
+                  <input type="text" id="jurisdictionNo" name="jurisdictionNo" value={form4Data.jurisdictionNo} onChange={handleChange}/>
                   {formErrors.jurisdictionNo && (
                     <p className="error-message">
                       {formErrors.jurisdictionNo}

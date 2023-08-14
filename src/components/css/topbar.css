@@ -69,3 +69,8 @@
   align-items: center;
   margin-right: 8px;
 }
+
+.custom-menu-link {
+  text-decoration: none;
+  color: white;
+}
