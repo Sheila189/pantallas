@@ -1,31 +1,56 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, IconButton } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LogoutIcon from '@mui/icons-material/Logout';
-import '../css/topbar.css';
-import { UserContext } from '../../shared/UserContext';
+import React, { useContext } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { AppBar, Toolbar, Typography, Button, IconButton } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
+import "../css/topbar.css";
+import { UserContext } from "../../shared/UserContext";
+import { getAuth } from "firebase/auth";
+import { margin } from "@mui/system";
 
 const TopBar = ({ handleLogout }) => {
-  const { userData } = useContext(UserContext);
+  const { userData, logout } = useContext(UserContext);
+  const navigate = useNavigate();
+  const logoutBtn = () => {
+    localStorage.removeItem("user");
+    const auth = getAuth();
+    auth.signOut();
+    logout();
+    navigate("/");
+  };
 
   return (
     <AppBar position="static" className="topbar">
       <Toolbar className="topbar-content">
         <div>
-          <h5>{userData.name}</h5>
-          {userData.avatar && (
-            <img src={userData.avatar} alt="Avatar" style={{ width: '150px', height: '150px' }} />
-          )}
+          <h2>{userData.name_empresa}</h2>
         </div>
         <Typography variant="h6" className="menu-title">
-          Menu 
+          Menu
         </Typography>
         <div className="right-content">
-          <IconButton component={Link} to="/perfil" color="inherit" className="user">
-            <AccountCircleIcon />
+          <IconButton
+            component={Link}
+            to="/profile"
+            color="inherit"
+            className="user"
+          >
+           {userData.logo && (
+            <img
+              src={userData.logo}
+              alt="Avatar"
+              className="avatar mt-0"
+            />
+          )}
           </IconButton>
-          <Button startIcon={<LogoutIcon />} to="/login" variant="contained" className="logout-button" size="large" onClick={handleLogout}>
+          <Button
+            startIcon={<LogoutIcon />}
+            to="/login"
+            variant="contained"
+            className="logout-button"
+            size="large"
+            onClick={logoutBtn}
+          >
             Logout
           </Button>
         </div>

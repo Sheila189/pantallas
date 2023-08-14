@@ -12,7 +12,7 @@ import PreviewDialog from './previews/PreviewDialog';
 import EditFormNameDialog from './previews/EditFormNameDialog';
 import TopBar from './TopBar';
 
-const Historial = () => {
+const Users = () => {
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState('');
   const [sortColumn, setSortColumn] = useState('');
@@ -56,19 +56,19 @@ const Historial = () => {
 
   // Datos de ejemplo
   const formData = [
-    { nombre: 'Formulario 1', owner: 'Metalins', fecha: '2023-05-20', tipo: 'NB-136' },
-    { nombre: 'Formulario 2', owner: 'Coca-Cola', fecha: '2023-05-22', tipo: 'NB-4' },
-    { nombre: 'Formulario 3', owner: 'Femsa', fecha: '2023-05-23', tipo: 'NB-5' },
-    { nombre: 'Formulario 1', owner: 'Thales', fecha: '2023-05-20', tipo: 'NB-6' },
-    { nombre: 'Formulario 2', owner: 'Nissan', fecha: '2023-05-22', tipo: 'NB-7' },
-    { nombre: 'Formulario 3', owner: 'Gems', fecha: '2023-05-23', tipo: 'NB-403' },
+    { nombre: 'Juan Carlos Flores', fecha: '2023-05-20', rol: 'Admin' },
+    { nombre: 'Pedro Francisco Gomez', fecha: '2023-05-22', rol: 'Cliente' },
+    { nombre: 'Karla Castillo', fecha: '2023-05-23', rol: 'Cliente' },
+    { nombre: 'Ana Figueroa', fecha: '2023-05-20', rol: 'Cliente' },
+    { nombre: 'Perla Sanchez', fecha: '2023-05-22', rol: 'Admin' },
+    { nombre: 'Formulario 3', fecha: '2023-05-23', rol: 'Cliente' },
     // ...
   ];
 
   // Filtrar los datos basado en el texto de búsqueda
   const filteredData = formData.filter((form) => {
     const searchValue = searchText.toLowerCase();
-    return form.nombre.toLowerCase().includes(searchValue) || form.owner.toLowerCase().includes(searchValue) || form.tipo.toLowerCase().includes(searchValue) || form.fecha.toLowerCase().includes(searchValue);
+    return form.nombre.toLowerCase().includes(searchValue) || form.rol.toLowerCase().includes(searchValue) || form.fecha.toLowerCase().includes(searchValue);
   });
 
   // Ordenar los datos según la columna y dirección del ordenamiento
@@ -147,18 +147,13 @@ const Historial = () => {
               </TableSortLabel>
             </TableCell>
             <TableCell style={{ textAlign: 'center' }}>
-              <TableSortLabel active={sortColumn === 'owner'} direction={sortColumn === 'owner' ? sortDirection : 'asc'} onClick={() => handleSort('owner')}>
-                Owner
-              </TableSortLabel>
-            </TableCell>
-            <TableCell style={{ textAlign: 'center' }}>
               <TableSortLabel active={sortColumn === 'fecha'} direction={sortColumn === 'fecha' ? sortDirection : 'asc'} onClick={() => handleSort('fecha')}>
                 Date
               </TableSortLabel>
             </TableCell>
             <TableCell style={{ textAlign: 'center' }}>
-              <TableSortLabel active={sortColumn === 'tipo'} direction={sortColumn === 'tipo' ? sortDirection : 'asc'} onClick={() => handleSort('tipo')}>
-                Type
+              <TableSortLabel active={sortColumn === 'rol'} direction={sortColumn === 'rol' ? sortDirection : 'asc'} onClick={() => handleSort('rol')}>
+                Rol
               </TableSortLabel>
             </TableCell>
             <TableCell style={{ width: '20%', textAlign: 'center' }}>Accion</TableCell>
@@ -169,9 +164,8 @@ const Historial = () => {
             <TableRow key={index}>
               <TableCell style={{ textAlign: 'center' }}>{form.nombre}</TableCell>
               {/* Columna para el Owner */}
-              <TableCell style={{ textAlign: 'center' }}>{form.owner}</TableCell>
               <TableCell style={{ textAlign: 'center' }}>{form.fecha}</TableCell>
-              <TableCell style={{ textAlign: 'center' }}>{form.tipo}</TableCell>
+              <TableCell style={{ textAlign: 'center' }}>{form.rol}</TableCell>
               <TableCell style={{ display: 'flex', justifyContent: 'space-between' }}>
                 {/* Botón para ver el formulario */}
                 <IconButton color="primary" onClick={() => handleOpenPreviewDialog(form)}>
@@ -186,9 +180,7 @@ const Historial = () => {
                 </IconButton>
                 <EditFormNameDialog open={openEditFormNameDialog} initialName={editingFormName} onSave={handleSaveFormName} onClose={handleCancelEditFormName}/>
                 {/* Botón para descargar el formulario */}
-                <IconButton color="primary" onClick={() => handleDownloadForm(form)}>
-                  <CloudDownloadIcon />
-                </IconButton>
+                
                 {/* Botón para eliminar el formulario */}
                 <IconButton color="primary" onClick={() => handleDeleteForm(form)}>
                   <DeleteIcon />
@@ -223,4 +215,4 @@ const Historial = () => {
   );
 };
 
-export default Historial;
+export default Users;

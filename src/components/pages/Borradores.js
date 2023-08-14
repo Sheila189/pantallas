@@ -56,19 +56,19 @@ const Borradores = () => {
 
   // Datos de ejemplo
   const formData = [
-    { nombre: 'Formulario 1', fecha: '2023-05-20', tipo: 'NB-136' },
-    { nombre: 'Formulario 2', fecha: '2023-05-22', tipo: 'NB-4' },
-    { nombre: 'Formulario 3', fecha: '2023-05-23', tipo: 'NB-5' },
-    { nombre: 'Formulario 1', fecha: '2023-05-20', tipo: 'NB-6' },
-    { nombre: 'Formulario 2', fecha: '2023-05-22', tipo: 'NB-7' },
-    { nombre: 'Formulario 3', fecha: '2023-05-23', tipo: 'NB-403' },
+    { nombre: 'Formulario 1', owner: 'Metalins', fecha: '2023-05-20', tipo: 'NB-136' },
+    { nombre: 'Formulario 2', owner: 'Coca-Cola', fecha: '2023-05-22', tipo: 'NB-4' },
+    { nombre: 'Formulario 3', owner: 'Femsa', fecha: '2023-05-23', tipo: 'NB-5' },
+    { nombre: 'Formulario 1', owner: 'Thales', fecha: '2023-05-20', tipo: 'NB-6' },
+    { nombre: 'Formulario 2', owner: 'Nissan', fecha: '2023-05-22', tipo: 'NB-7' },
+    { nombre: 'Formulario 3', owner: 'Gems', fecha: '2023-05-23', tipo: 'NB-403' },
     // ...
   ];
 
   // Filtrar los datos basado en el texto de búsqueda
   const filteredData = formData.filter((form) => {
     const searchValue = searchText.toLowerCase();
-    return form.nombre.toLowerCase().includes(searchValue) || form.tipo.toLowerCase().includes(searchValue) || form.fecha.toLowerCase().includes(searchValue);
+    return form.nombre.toLowerCase().includes(searchValue) || form.owner.toLowerCase().includes(searchValue) || form.tipo.toLowerCase().includes(searchValue) || form.fecha.toLowerCase().includes(searchValue);
   });
 
   // Ordenar los datos según la columna y dirección del ordenamiento
@@ -168,10 +168,11 @@ const Borradores = () => {
           {paginatedData.map((form, index) => (
             <TableRow key={index}>
               <TableCell style={{ textAlign: 'center' }}>{form.nombre}</TableCell>
+              <TableCell style={{ textAlign: 'center' }}>{form.owner}</TableCell>
               <TableCell style={{ textAlign: 'center' }}>{form.fecha}</TableCell>
               <TableCell style={{ textAlign: 'center' }}>{form.tipo}</TableCell>
               {/* Columna para el Owner */}
-              <TableCell style={{ textAlign: 'center' }}>{form.owner}</TableCell>
+              
               <TableCell style={{ display: 'flex', justifyContent: 'space-between' }}>
                 {/* Botón para ver el formulario */}
                 <IconButton color="primary" onClick={() => handleOpenPreviewDialog(form)}>

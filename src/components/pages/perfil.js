@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useMediaQuery } from '@mui/material';
 import TopBar from './TopBar';
 import '../css/perfil.css';
+import { UserContext } from '../../shared/UserContext';
 
 const Perfil = () => {
   const navigate = useNavigate();
@@ -12,20 +13,12 @@ const Perfil = () => {
     navigate(-1);
   };
 
-  const [userData, setUserData] = useState({
-    name: 'John Doe',
-    address: '',
-    streetAddress: '',
-    addressLine2: '',
-    city: '',
-    postalCode: '',
-    state: '',
-    country: '',
-    avatar: '',
-  });
+ const { userData, setUserData } = useContext(UserContext);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [isEditingAuth, setIsEditingAuth] = useState(false);
+  const [isEditingUsers, setIsEditingUsers] = useState(false);
+  //const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -51,13 +44,18 @@ const Perfil = () => {
     setIsEditing(true);
   };
 
-  const handleEditAddress = () => {
-    setIsEditingAddress(true);
+  const handleEditUsers = () => {
+    setIsEditingUsers(true);
+  };
+
+  const handleEditAuth = () => {
+    setIsEditingAuth(true);
   };
 
   const handleSaveChanges = () => {
     setIsEditing(false);
-    setIsEditingAddress(false);
+    setIsEditingUsers(false);
+    setIsEditingAuth(false);
   };
 
   const isSmallScreen = useMediaQuery('(max-width: 500px)');
@@ -74,28 +72,22 @@ const Perfil = () => {
         <div className={`perfil-section ${isMediumScreen || (isLargeScreen && !isSmallScreen) ? 'column-1' : ''}`}>
         <div className="input-container">
           <label>
-            Avatar:
+            Logo:
             <div className="file-input-wrapper">
-              <input
-                type="file"
-                name="avatar"
-                accept="image/*"
-                onChange={handleChange}
-                disabled={!isEditing}
-              />
+              <input type="file" name="avatar" accept="image/*" onChange={handleChange} disabled={!isEditing}/>
               <button className="file-input-button" disabled={!isEditing} type="button">
                 Seleccionar imagen
               </button>
             </div>
           </label>
-          {userData.avatar && (
-            <img src={userData.avatar} alt="Avatar" className="avatar-image" />
+          {userData.logo && (
+            <img src={userData.logo} alt="Avatar"  style={{ height: 100, width: 100, marginLeft: 20, marginTop: 20 }}/>
           )}
         </div>
             <div className="input-container">
               <label>
-                Nombre:
-                <input type="text" name="name" value={userData.name} onChange={handleChange} disabled={!isEditing} className={isSmallScreen ? "full-width" : ""}/>
+                Nombre de la Empresa:
+                <input type="text" name="name_empresa" value={userData.name_empresa} onChange={handleChange} disabled={!isEditing} className={isSmallScreen ? "full-width" : ""}/>
               </label>
             </div>
             {!isEditing && (
@@ -114,93 +106,69 @@ const Perfil = () => {
           <div className={`perfil-section ${isMediumScreen || (isLargeScreen && !isSmallScreen) ? 'column-2' : ''}`}>
             <div className="address-container">
               <hr className="separator" />
-              <h3 className="address-title">Dirección</h3>
+              <h3 className="address-title">Datos Usuario</h3>
               <div className="address-section">
                 <div className="address-item">
-                  <label>Dirección:</label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={userData.address}
-                    onChange={handleChange}
-                    disabled={!isEditingAddress}
-                    className={isSmallScreen ? "full-width" : ""}
+                  <label>Nombre:</label>
+                  <input type="text" name="address" value={userData.name} onChange={handleChange}
+                    disabled={!setIsEditingUsers} className={isSmallScreen ? "full-width" : ""}/>
+                </div>
+                <div className="address-item">
+                  <label>Segundo nombre:</label>
+                  <input type="text" name="streetAddress" value={userData.middle} onChange={handleChange} 
+                   disabled={!setIsEditingUsers} className={isSmallScreen ? "full-width" : ""}/>
+                </div>
+                <div className="address-item">
+                  <label>Apellidos:</label>
+                  <input type="text" name="addressLine2" value={userData.lastname} onChange={handleChange}
+                    disabled={!setIsEditingUsers} className={isSmallScreen ? "full-width" : ""}
                   />
                 </div>
                 <div className="address-item">
-                  <label>Dirección de calle:</label>
-                  <input
-                    type="text"
-                    name="streetAddress"
-                    value={userData.streetAddress}
-                    onChange={handleChange}
-                    disabled={!isEditingAddress}
-                    className={isSmallScreen ? "full-width" : ""}
-                  />
+                  <label>Signature:</label>
+                  <div className="file-input-wrapper">
+                    <input type="file" name="avatar" accept="image/*" onChange={handleChange} disabled={!setIsEditingUsers}/>
+                    <button className="file-input-button" disabled={!setIsEditingUsers} type="button">
+                      Seleccionar imagen
+                    </button>
+                  </div>
+                  {userData.signature && (
+                    <img src={userData.signature} alt="Avatar"  style={{ height: 100, width: 100, marginLeft: 20, marginTop: 20 }}/>
+                  )}
                 </div>
-                <div className="address-item">
-                  <label>Línea de dirección 2:</label>
-                  <input
-                    type="text"
-                    name="addressLine2"
-                    value={userData.addressLine2}
-                    onChange={handleChange}
-                    disabled={!isEditingAddress}
-                    className={isSmallScreen ? "full-width" : ""}
-                  />
-                </div>
-                <div className="address-item">
-                  <label>Ciudad/Distrito:</label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={userData.city}
-                    onChange={handleChange}
-                    disabled={!isEditingAddress}
-                    className={isSmallScreen ? "full-width" : ""}
-                  />
-                </div>
-                <div className="address-item">
-                  <label>Código postal:</label>
-                  <input
-                    type="text"
-                    name="postalCode"
-                    value={userData.postalCode}
-                    onChange={handleChange}
-                    disabled={!isEditingAddress}
-                    className={isSmallScreen ? "full-width" : ""}
-                  />
-                </div>
-                <div className="address-item">
-                  <label>Estado/Provincia/Región:</label>
-                  <input
-                    type="text"
-                    name="state"
-                    value={userData.state}
-                    onChange={handleChange}
-                    disabled={!isEditingAddress}
-                    className={isSmallScreen ? "full-width" : ""}
-                  />
-                </div>
-                <div className="address-item">
-                  <label>País:</label>
-                  <input
-                    type="text"
-                    name="country"
-                    value={userData.country}
-                    onChange={handleChange}
-                    disabled={!isEditingAddress}
-                    className={isSmallScreen ? "full-width" : ""}
-                  />
-                </div>
-                {!isEditingAddress && (
-                  <button className="edit-button" onClick={handleEditAddress}>
-                    Editar Dirección
+                {!isEditingUsers && (
+                  <button className="edit-button" onClick={handleEditUsers}>
+                    Editar Datos
                   </button>
                 )}
-                {isEditingAddress && (
+                {isEditingUsers&& (
                   <button className="save-button" onClick={handleSaveChanges}>
-                    Guardar Dirección
+                    Guardar Datos
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="address-container">
+              <hr className="separator" />
+              <h3 className="address-title">Datos Cuenta</h3>
+              <div className="address-section">
+                <div className="address-item">
+                  <label>Email:</label>
+                  <input type="text" name="address" value={userData.email} onChange={handleChange} className={isSmallScreen ? "full-width" : ""}/>
+                </div>
+                <div className="address-item">
+                  <label>Contraseña:</label>
+                  <input type="text" name="streetAddress" value={userData.password} onChange={handleChange} 
+                   disabled={!setIsEditingAuth} className={isSmallScreen ? "full-width" : ""}/>
+                </div>
+                {!isEditingAuth && (
+                  <button className="edit-button" onClick={handleEditAuth}>
+                    Editar Cuenta
+                  </button>
+                )}
+                {isEditingAuth&& (
+                  <button className="save-button" onClick={handleSaveChanges}>
+                    Guardar Datos
                   </button>
                 )}
               </div>
@@ -216,5 +184,4 @@ const Perfil = () => {
 };
 
 export default Perfil;
-
 

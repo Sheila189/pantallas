@@ -23,7 +23,7 @@ const NotFound = () => {
     if (previousPath) {
       navigate(previousPath); // Regresa a la ruta anterior
     } else {
-      navigate('/'); // Si no hay ruta anterior, redirige a la página de inicio
+      navigate(-1); // Regresa a la página anterior
     }
   };
 
