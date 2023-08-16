@@ -26,11 +26,19 @@
   align-items: center;
 }
 
-.name {
+.name_empresa {
   margin-left: 18px;
-  font-size: 24px;
+  font-size: 25px;
   font-weight: bold;
   color: #fff;
+}
+
+.name {
+  margin-left: 18px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 5px;
 }
 
 .menu-title {

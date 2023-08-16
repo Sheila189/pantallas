@@ -1,74 +1,104 @@
 .container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  width: 100%;
-  max-width: 1500px;
-  margin: 20px auto;
+  margin-bottom: 20px;
+  text-align: center;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+/* Ajustes adicionales para ocupar toda la pantalla */
+.formulario {
+  width: 80%;
+  margin: 0 auto;
+  padding: 10px;
+  margin-left: 10px;
 }
 
 table {
-  width: 950px;
+  width: 100%;
+  max-width: 550px; 
   border-collapse: collapse;
   border: 1px solid #000;
 }
 
-td {
+/* Estilos para la tabla */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+/* Contenedor principal */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Contenedor de la tabla y botones */
+.form-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.button-container button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.centered-text {
+  text-align: center;
+}
+
+.centered-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.conteiner_cert{
+  width: 550px;
+  border-collapse: separate;
+  border-spacing: 10px; 
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+/* Estilos para los td dentro de la tabla */
+.conteiner_cert td {
   padding: 10px;
 }
 
-.form-title {
+.arrow-container {
+  text-align: left;
+  width: 100%;
+}
+
+.title{
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
-.form-item {
-  margin-bottom: 10px;
-}
-
-.form-check-option {
   margin-bottom: 5px;
-  display: flex;
-  align-items: center; /* Es para tenerlo centrado */
-  white-space: nowrap;
-  justify-content: flex-start;
-  margin-left: 20px;
+  margin-top: 5px;
 }
 
-.form-check-input {
-  margin-right: 3px;
-  align-self: center; /* Es para tenerlo centrado */
-}
-
-.form-check-label {
-  width: auto;
-  text-align: left; /* Cambio a alineación a la izquierda */
-  display: flex;
-  align-items: left;
-}
-
-.label {
-  width: 200px;
-  text-align: left; /* Cambio a alineación a la izquierda */
-  margin-right: 20px;
-}
-
-.htmlFor {
-  width: 200px;
-  text-align: left; /* Cambio a alineación a la izquierda */
-  margin-right: 20px;
-}
-
-/* Estilo adicional para las últimas opciones */
-.form-check-option:last-child .form-check-label {
-  width: auto;
+.form-title {
+  margin-top: 10px;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .nowrap {
   white-space: nowrap;
-  text-align: left;
 }
 
 .picture_nameplate {
@@ -77,6 +107,14 @@ td {
 
 .custom-box {
   width: 4.6cm;
+  min-width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  padding: 4.6px;
+}
+
+.custom-box2 {
+  width: 7.6cm;
   min-width: 100%;
   box-sizing: border-box;
   border: 1px solid #ccc;
@@ -104,33 +142,7 @@ td {
   margin-left: 5px; /* Espacio entre el checkbox y el texto "ATTACHED" 12 */
 }
 
-.conteiner_cert{
-  width: 850px;
+.numero{
   border-collapse: collapse;
   border: 1px solid #000;
-}
-
-.title{
-  text-align: center;
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
-.numero{
-    border-collapse: collapse;
-    border: 1px solid #000;
-}
-
-#jurisdiction,
-#date_service,
-#effective_Date {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-}
-
-/* Ajustes adicionales para ocupar toda la pantalla */
-.formulario {
-  width: 1200px;
-  margin-right: 20px;
 }

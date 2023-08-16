@@ -25,11 +25,6 @@ const MenuPrincipal = () => {
             </Button>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Button component={Link} to="/edit_forms" variant="contained" color="primary" size="large" fullWidth style={{ fontSize: '120%', fontWeight: 'bold' }}>
-              Edit Forms
-            </Button>
-          </Grid>
-          <Grid item xs={12} sm={4}>
             <Button component={Link} to="/users" variant="contained" color="primary" size="large" fullWidth style={{ fontSize: '120%', fontWeight: 'bold' }}>
               Users
             </Button>

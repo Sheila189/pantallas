@@ -27,7 +27,7 @@ const TopBar = ({ handleLogout }) => {
               <img src={userData.logo} alt="Avatar" className="avatar mt-0" />
             )}
           </div>
-          <div className="name">{userData.name_empresa}</div>
+          <div className="name_empresa">{userData.name_empresa}</div>
         </div>
         <Typography variant="h3" className="menu-title">
           <Link to="/menu" className="custom-menu-link">
